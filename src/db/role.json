@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "admin",
+        "desc": "",
+        "permission": [
+            "delProjectAdmin",
+            "addProjectAdmin",
+            "delUser",
+            "addUser",
+            "work"
+        ]
+    },
+    {
+        "id": 2,
+        "name": "project_admin",
+        "desc": "",
+        "permission": [
+            "delUser",
+            "addUser",
+            "work"
+        ]
+    },
+    {
+        "id": 3,
+        "name": "member",
+        "desc": "",
+        "permission": [
+            "work"
+        ]
+    }
+]

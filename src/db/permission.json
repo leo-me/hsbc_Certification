@@ -1,0 +1,22 @@
+[
+    {
+        "key": "work",
+        "desc": ""
+    },
+    {
+        "key": "addUser",
+        "desc": ""
+    },
+    {
+        "key": "delUser",
+        "desc": ""
+    },
+    {
+        "key": "addProjectAdmin",
+        "desc": ""
+    },
+    {
+        "key": "delProjectAdmin",
+        "desc": ""
+    }
+]

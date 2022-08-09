@@ -1,0 +1,32 @@
+{
+  "name": "hsbc_certification",
+  "version": "1.0.0",
+  "description": "authorization service",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./src/app.js",
+    "dev": "pm2-dev start ./src/app.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leo-me/hsbc_Certification.git"
+  },
+  "keywords": [
+    "nodejs",
+    "authorization"
+  ],
+  "author": "leo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leo-me/hsbc_Certification/issues"
+  },
+  "homepage": "https://github.com/leo-me/hsbc_Certification#readme",
+  "devDependencies": {
+    "jest": "^28.1.3",
+    "supertest": "^6.2.4"
+  },
+  "dependencies": {
+    "cryptr": "^6.0.3"
+  }
+}
