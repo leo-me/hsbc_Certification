@@ -1,5 +1,11 @@
+const statusCode = require('../status');
+
+
 function main() {
-    return 'welcome to work!';
+    return {
+        code: statusCode.success,
+        msg: 'welcom to work'
+    };
 }
 
 

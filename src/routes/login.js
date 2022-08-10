@@ -3,9 +3,16 @@ const fs = require('fs');
 const user = require('../db/user.json');
 const config = require('../config');
 const statusCode = require('../status');
+const utils = require('../utils');
 
 
-function authenticate({username, password}) {
+/**
+ *
+ * @param {string} username
+ * @param {string} password  with aes encryption
+ * @returns {object}
+ */
+function authenticate(username, password) {
 
     if (!(username && password)) {
         return {
@@ -18,8 +25,6 @@ function authenticate({username, password}) {
 
     try {
         const decryptedPassword = cryptr.decrypt(password);
-        console.log('decryptedPassword: ', decryptedPassword);
-        console.log('username', username);
 
         const findIndex = user.findIndex(item => {
             if (item.name === username && item.password === decryptedPassword) {
@@ -27,10 +32,9 @@ function authenticate({username, password}) {
             }
         });
 
-        console.log('findIndex', findIndex);
 
 
-        if (findIndex > -1) {
+        if (findIndex !== -1) {
             let newData = Object.assign([], user);
             let token = user[findIndex].token;
             let expires = newData[findIndex].expireTime;
@@ -40,19 +44,14 @@ function authenticate({username, password}) {
             // not find or the token has expired
             if(typeof token === 'undefined' || (expires && now > expires)) {
                 // generate token
-                const expireTime = now + 2 * 60 * 1000;
+                const expireTime = now + 2 *60* 60 * 1000;
                 token = cryptr.encrypt(`${username}-${expireTime}`);
 
                 newData[findIndex].token = token;
                 newData[findIndex].expireTime = expireTime;
 
-                fs.writeFile('src/db/user.json', JSON.stringify(newData), function (err) {
-                    if (err) {
-                        console.log('err: ', err);
-                    }
-                });
+                utils.writeDB('src/db/user.json', newData);
             }
-
 
             return {
                 code: statusCode.success,
@@ -62,22 +61,27 @@ function authenticate({username, password}) {
 
         } else {
             return {
-                code: statusCode.success,
+                code: statusCode.badRequest,
                 msg: 'login fail, please check your name or password'
             };
         }
 
     } catch (error) {
+        // console.log('error: ', error);
 
         return {
-            code: statusCode.forbiddan,
-            msg: "password format not right"
+            code: statusCode.badRequest,
+            msg: "please check your input"
         };
     }
 }
 
 
-
+/**
+ *
+ * @param {string} token with aes encryption
+ * @returns {void}
+ */
 function invalidate(token) {
     if(!token) return;
 
@@ -99,11 +103,13 @@ function invalidate(token) {
             newData[findIndex].token = '';
             newData[findIndex].expireTime = '';
 
-            fs.writeFile('src/db/user.json', JSON.stringify(newData), function (err) {
-                if (err) {
-                    console.log('err: ', err);
-                }
-            });
+            utils.writeDB('src/db/user.json', newData);
+
+            // fs.writeFile('src/db/user.json', JSON.stringify(newData), function (err) {
+            //     if (err) {
+            //         console.log('err: ', err);
+            //     }
+            // });
         }
 
 
@@ -113,7 +119,11 @@ function invalidate(token) {
 
 }
 
-
+/**
+ *
+ * @param {string} token
+ * @returns {boolean}
+ */
 function checkTokenValid(token) {
     if(!token) return false;
 
@@ -122,11 +132,12 @@ function checkTokenValid(token) {
         const decryptedToken = cryptr.decrypt(token);
         const tokenArr = decryptedToken.split('-');
         const username = tokenArr[0];
-        const expireTime = tokenArr[1];
+        let expireTime = tokenArr[1];
+        expireTime = Number(expireTime);
 
         const now = Date.now();
 
-        if(typeof username !== 'string' || typeof expireTime !== 'number') {
+        if(!(username && expireTime)) {
             return false;
         }
 
@@ -137,6 +148,7 @@ function checkTokenValid(token) {
         }
 
     } catch (error) {
+        // console.log('error: ', error);
         return false;
     }
 
@@ -146,5 +158,6 @@ function checkTokenValid(token) {
 
 module.exports = {
     authenticate,
-    invalidate
+    invalidate,
+    checkTokenValid
 };

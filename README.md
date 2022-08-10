@@ -1,6 +1,11 @@
 # hsbc_certification
 a certification system in javascript
 
+
+# system design documentation
+
+[click here](./design.md)
+
 # how to run it
 
 npm install

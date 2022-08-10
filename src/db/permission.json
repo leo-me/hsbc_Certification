@@ -1,22 +1,22 @@
 [
     {
-        "key": "work",
+        "id": "work",
         "desc": ""
     },
     {
-        "key": "addUser",
+        "id": "addUser",
         "desc": ""
     },
     {
-        "key": "delUser",
+        "id": "delUser",
         "desc": ""
     },
     {
-        "key": "addProjectAdmin",
+        "id": "addProjectAdmin",
         "desc": ""
     },
     {
-        "key": "delProjectAdmin",
+        "id": "delProjectAdmin",
         "desc": ""
     }
 ]

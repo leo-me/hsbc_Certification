@@ -8,29 +8,32 @@ const hostname = '127.0.0.1';
 const port = 3000;
 
 const server = http.createServer(async(req, res) => {
-  // request
+  // GET query
   const { pathname, query } = url.parse(req.url);
 
   const buffers = [];
   for await (const chunk of req) {
     buffers.push(chunk);
   }
-  const body = Buffer.concat(buffers).toString();
+
+  // POST params
+  let body = Buffer.concat(buffers).toString();
 
   const params = utils.parseQuery(query || body);
 
-
   const cookie = utils.parseCookies(req);
-
+  // console.log('cookie.token: ', cookie, cookie.token);
+  params.token = cookie.token;
 
   // response
-  const {code, token, ...info} = router.route(pathname, params, cookie.token);
+  const {code, token, ...info} = router.route(pathname, params);
+  // console.log('code: ', code);
 
   if(token) {
     res.setHeader("Set-Cookie", [
-      `token=${token}`
+      `token=${token}`,
+      "HTTPOnly"
     ]);
-
   }
 
   res.statusCode = code;
