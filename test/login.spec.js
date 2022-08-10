@@ -19,10 +19,8 @@ test('testing user can login with right name and password', async() => {
         })
         .expect(200)
         .expect((response) => {
-            assert.ok(response.text, 'login success');
+            assert.equal(response.text, 'login success');
         });
-
-
 });
 
 
@@ -65,7 +63,7 @@ test('testing user can not login with empty name and password', async() => {
     })
     .expect(403)
     .expect((response) => {
-        assert.ok(response.text, 'missing parameter');
+        assert.equal(response.text, 'missing parameter');
     });
 });
 

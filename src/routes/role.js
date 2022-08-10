@@ -37,7 +37,7 @@ function createRole(roleName) {
         let newData = Object.assign([], roleDB);
 
         newData.push({
-            "id":  `r-${Math.floor(Math.random()*100)}`,
+            "id":  `r-${Math.floor(Math.random()*100000)}`,
             "name": roleName,
             "desc": "",
             "permission": []

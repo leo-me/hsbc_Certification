@@ -5,7 +5,7 @@ const assert = require("assert");
 const utils = require('../src/utils');
 const config = require('../src/config');
 const Cryptr = require('cryptr');
-
+const roleDB = require('../src/db/role.json');
 
 const cryptr = new Cryptr(config.cryptrKey);
 const token = cryptr.encrypt(`adam-${Date.now() + 2*60*60*1000}`);
@@ -16,7 +16,7 @@ test('testing add role ', async() => {
     await agent.post('/role/add')
     .set('Content-type', 'application/x-www-form-urlencoded')
     .send({
-        roleName: utils.randomString(6),
+        roleName: `${utils.randomString(8)}`,
     })
     .expect(200)
     .expect((response) => {
@@ -47,8 +47,10 @@ test('testing add empty role ', async() => {
 
 
 test('testing delete a right role id', async() => {
+    const lastRole = roleDB[roleDB.length - 1];
+
     await agent.get('/role/delete')
-    .query({ roleId: 'r-41' })
+    .query({ roleId: lastRole.id })
     .set('Content-type', 'application/x-www-form-urlencoded')
     .expect(200)
     .expect((response) => {
@@ -77,14 +79,14 @@ test('testing delete a empty role id', async() => {
 });
 
 
-test('testing add a role to a user', async() => {
+test('testing add a role to a user , that user already have', async() => {
     await agent.post('/role/addToUser')
     .set('Content-type', 'application/x-www-form-urlencoded')
     .send({
         userId: 's-944',
         roleId: 'r-47',
     })
-    .expect(200)
+    .expect(400)
 });
 
 

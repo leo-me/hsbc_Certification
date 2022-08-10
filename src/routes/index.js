@@ -57,10 +57,7 @@ function route(path, params) {
             // what's the role
             return user.deleteUser(userId);
         default:
-            return {
-                code: 200,
-                msg: 'welcome'
-            };
+            return work.main();
     }
 }
 

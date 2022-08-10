@@ -1,4 +1,4 @@
-## Design ideas
+## System Design
 
 The design of this authority system is based on the RBAC model, and the system includes three major parts: user management, role management, and authority management.
 
@@ -60,12 +60,60 @@ Each user has its own: id, username, password, role (can not)
 ## Authentication module
 
 ### Login authentication
+1. verify with username and password
+2. password should be encrypt by aes
 
-1. api: /login
-2. params:
+
+```js
+api: '/login'
+
+Method: POST
+
+params:
+
+username: string,
+password: string
+
+example:
+{
+    roleName: 'hk_sales',
+}
+
+return:
+
+example:
+{
+    msg: 'sucess'
+}
+
+
+```
 
 
 ### Invalidate
+1. token should be encrypted by aes
+2. get token from cookie
+3.
+
+api: '/login'
+
+Method: POST
+
+params:
+
+token: string
+
+example:
+{
+    token: '2a3260f5ac4754b8ee3021ad413ddbc11f04138d01fe0c5889a0dd7b4a97e342a4f43bb43f3c83033626a76f7ace2479705ec7579e4c151f2e2196455be09b29bfc9055f82cdc92a1fe735825af1f75cfb9c94ad765c06a8abe9668fca5c42d45a7ec233f0',
+}
+
+return:
+
+example:
+{
+    msg: 'sucess'
+}
 
 
 ### checkTokenValid
@@ -78,6 +126,31 @@ Each user has its own: id, username, password, role (can not)
 ### create role
 1. must be a combination of letters and _, -, at least 3 characters long
 2. if role already exsists, not allowed
+
+```js
+api: '/role/add'
+
+Method: POST
+
+params:
+
+roleName: string,
+
+example:
+{
+    roleName: 'hk_sales',
+}
+
+return:
+
+example:
+{
+    msg: 'sucess'
+}
+
+
+```
+
 
 
 ### delete role
@@ -92,16 +165,21 @@ Method: GET
 
 params:
 
-userId: string
+roleId: string
+
+example:
 
 {
-    userId: 'dddd',
+    roleId: 'dddd',
 }
 
+return:
+
+example:
 {
     msg: 'success',
 }
-
+```
 
 
 ## check role
@@ -117,12 +195,14 @@ params:
 
 roleId: string,
 
+example:
 {
     roleId: 'r-111',
 }
 
 return:
 
+example:
 {
     msg: '',
     data: true
@@ -146,16 +226,47 @@ params:
 userId: string,
 roleId: string,
 
+example:
 {
     userId: 's-8888',
     roleId: 'r-111',
 }
 
+example:
 {
     msg: 'success',
 }
 
+```
 
+### get all roles
+1. token must be in valid time
+2. if token expires, no other actions
+3. In actual use, we first need to verify permissions
+
+
+```js
+api: '/role/list'
+
+Method: GET
+
+params:
+
+token: string
+
+example:
+
+{
+    token: '2a3260f5ac4754b8ee3021ad413ddbc11f04138d01fe0c5889a0dd7b4a97e342a4f43bb43f3c83033626a76f7ace2479705ec7579e4c151f2e2196455be09b29bfc9055f82cdc92a1fe735825af1f75cfb9c94ad765c06a8abe9668fca5c42d45a7ec233f0',
+}
+
+return:
+
+example:
+{
+    msg: 'success',
+    data: [{ "id": "r-18", "name": "PNfAar", "desc": "", "permission": [] }]
+}
 ```
 
 
@@ -175,6 +286,7 @@ params:
 username: string
 password: string (with aes encryption)
 
+example:
 {
     username: 'zoe',
     password: '2a3260f5ac4754b8ee3021ad413ddbc11f04138d01fe0c5889a0dd7b4a97e342a4f43bb43f3c83033626a76f7ace2479705ec7579e4c151f2e2196455be09b29bfc9055f82cdc92a1fe735825af1f75cfb9c94ad765c06a8abe9668fca5c42d45a7ec233f0',
@@ -200,19 +312,37 @@ params:
 
 userId: string
 
+example:
 {
     userId: 'dddd',
 }
 
+return:
+
+example:
 {
     msg: 'success',
 }
-
-
 ```
 
 
 # Test case design
 
 1. Because of time，The test cases for the two methods（checkTokenValid 、invalidate） are left unwritten here.
-2.
+2. In practice, the test database should be used for testing.
+3. number of use cases： 28
+   - login: 5, should add 7 more， but i don't have enough time
+   - role: 18
+   - user: 7
+   - work: 1
+
+4. checkTokenValid test case design
+   - valid token，should be 200
+   - invalid token，should be 400
+   - empty token， should be 403
+
+5. invalidate
+   - token is valid, and in valid time, should be true
+   - token is valid, and in expires time, should be true
+   - token is invalid, should be false
+   - token is empty, should be false
