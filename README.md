@@ -4,7 +4,7 @@ a certification system in javascript
 
 # system design documentation
 
-[click here](./design.md)
+[click here](https://github.com/leo-me/hsbc_certification/blob/main/design.md)
 
 # technology stack
 1. javascript
