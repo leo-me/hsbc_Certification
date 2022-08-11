@@ -4,11 +4,11 @@ The design of this authority system is based on the RBAC model, and the system i
 
 ## Role
 
-1. Super administrator: super authority, add and delete project administrators, add and delete employees, log in
+1. Super administrator: super authority, add and delete project administrators, add and delete employees, login、work
 
-2. Project administrator: add employees, delete employees, log in
+2. Project administrator: add employees, delete employees, login、work
 
-3. Employee: some permissions, such as: login
+3. Employee: some permissions, such as: login、work
 
 
 # permissions
@@ -35,6 +35,8 @@ Each user has its own: id, username, password, role (can not)
 2. Use HTTPS protocol
 
 3. The token and the user's password are encrypted using aes. The front and back ends of the encrypted keys are consistent and updated frequently.
+
+4. In practice this encrypted keys should be more complex, here is just an example.
 
 # token
 
